@@ -3,31 +3,24 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 import asyncio
+from activities import ActivityCog
 
-# Load the environment variables from the .env file
+# Load environment variables from the .env file
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-# Set up the bot's intents. Intents specify which events your bot listens to.
+# Set up bot intents
 intents = discord.Intents.default()
-intents.message_content = True  # Required to read message content
-intents.members = True          # Required for member-related events
+intents.message_content = True
+intents.members = True
 
-# Create a bot instance with a command prefix of '!'
+# Create a bot instance
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # This event runs when the bot is online and ready
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
-
-# This event handles new members joining the server
-@bot.event
-async def on_member_join(member):
-    # Sends a welcome message to the server's default channel
-    channel = member.guild.system_channel
-    if channel is not None:
-        await channel.send(f'Welcome, {member.mention}! We\'re glad you\'re here.')
 
 # This is a simple command that responds to '!hello'
 @bot.command()
@@ -46,13 +39,12 @@ async def dm(ctx, *, message):
 # This command creates a basic poll with thumbs up and down reactions
 @bot.command()
 async def poll(ctx, *, question):
-    # Create an embedded message for a nicer look
     embed = discord.Embed(title="New Poll", description=question, color=discord.Color.blue())
     poll_message = await ctx.send(embed=embed)
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
 
-# This command logs daily activity with a single line of input
+# This command is a one-line activity logger
 @bot.command()
 async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap):
     message = (
@@ -66,12 +58,10 @@ async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap)
     )
     await ctx.send(message)
 
-# This command starts the conversational activity logger
-@bot.command(name='start_log')
-async def start_log_command(ctx):
-    # We will handle the rest of this conversation in a separate file (e.g., activities.py)
-    await ctx.send("Let's log your daily activity. Please enter the number of **Knocks**.")
+# This function adds the cogs to the bot
+async def main():
+    await bot.add_cog(ActivityCog(bot))
+    await bot.start(TOKEN)
 
-# Run the bot with the token from the .env file
 if __name__ == "__main__":
-    bot.run(TOKEN)
+    asyncio.run(main())
