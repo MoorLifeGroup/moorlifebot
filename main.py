@@ -51,6 +51,17 @@ async def poll(ctx, *, question):
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
 
+from activities import ActivityCog
+
+# After bot.run(TOKEN)
+async def main():
+    await bot.add_cog(ActivityCog(bot))
+    await bot.start(TOKEN)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+
 @bot.command()
 async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap):
     # Format the received data into a clean message
@@ -71,4 +82,5 @@ async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap)
 # Run the bot with the token from the .env file
 if __name__ == "__main__":
     bot.run(TOKEN)
+
 
