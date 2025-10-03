@@ -9,7 +9,7 @@ class ActivityCog(commands.Cog):
     @commands.command(name='start_log')
     async def start_log_command(self, ctx):
         user_id = ctx.author.id
-        self.active_conversations[user_id] = {'step': 0, 'data': {}}
+        self.active_conversations[user_id] = {'step': 0, 'data': {}, 'channel': ctx.channel}
         await ctx.send("Let's log your daily activity. Please enter the number of **Knocks**.")
 
     @commands.Cog.listener()
