@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+import asyncio
 
 # Load the environment variables from the .env file
 load_dotenv()
@@ -51,20 +52,9 @@ async def poll(ctx, *, question):
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
 
-from activities import ActivityCog
-
-# After bot.run(TOKEN)
-async def main():
-    await bot.add_cog(ActivityCog(bot))
-    await bot.start(TOKEN)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-
-
+# This command logs daily activity with a single line of input
 @bot.command()
 async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap):
-    # Format the received data into a clean message
     message = (
         f"**Daily Activity Report for {ctx.author.name}:**\n"
         f"Knocks: {knocks}\n"
@@ -74,13 +64,14 @@ async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap)
         f"Sales: {sales}\n"
         f"AP: {ap}"
     )
-    
-    # Send the confirmation message back to the channel
     await ctx.send(message)
 
+# This command starts the conversational activity logger
+@bot.command(name='start_log')
+async def start_log_command(ctx):
+    # We will handle the rest of this conversation in a separate file (e.g., activities.py)
+    await ctx.send("Let's log your daily activity. Please enter the number of **Knocks**.")
 
 # Run the bot with the token from the .env file
 if __name__ == "__main__":
     bot.run(TOKEN)
-
-
