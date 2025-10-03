@@ -51,6 +51,24 @@ async def poll(ctx, *, question):
     await poll_message.add_reaction("👍")
     await poll_message.add_reaction("👎")
 
+@bot.command()
+async def log_activity(ctx, knocks, presentations, ni, bad_addresses, sales, ap):
+    # Format the received data into a clean message
+    message = (
+        f"**Daily Activity Report for {ctx.author.name}:**\n"
+        f"Knocks: {knocks}\n"
+        f"Presentations: {presentations}\n"
+        f"NI: {ni}\n"
+        f"Bad Addresses: {bad_addresses}\n"
+        f"Sales: {sales}\n"
+        f"AP: {ap}"
+    )
+    
+    # Send the confirmation message back to the channel
+    await ctx.send(message)
+
+
 # Run the bot with the token from the .env file
 if __name__ == "__main__":
     bot.run(TOKEN)
+
